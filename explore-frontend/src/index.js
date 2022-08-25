@@ -9,6 +9,7 @@ import {
   Route,
 } from "react-router-dom";
 import ExcursionList from './components/ExcursionList';
+import ExcursionPage from './components/ExcursionPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -16,10 +17,14 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />}>
-          
+
         </Route>
         <Route path="list" element={<ExcursionList />}>
         </Route>
+        <Route path="page" element={<ExcursionPage />}>
+
+        </Route>
+
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
