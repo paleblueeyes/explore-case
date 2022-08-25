@@ -2,7 +2,7 @@ import './App.css';
 import React, { useEffect, useState } from 'react';
 
 import { doc, getDoc, query, orderBy, onSnapshot, collection } from 'firebase/firestore';
-import {db, getTripIdMaps, registerUserOnTrip} from './firebase'
+import {db, getTripIdMaps, registerUserOnTrip, cancelRegistration} from './firebase'
 
 
 
@@ -13,6 +13,7 @@ function App() {
 
   useEffect(() => {
     registerUserOnTrip('Oazw7tXQK4XTI5XBh8nB', 'lMPCZ7ggn4lOWQZsvlun')
+    cancelRegistration('Oazw7tXQK4XTI5XBh8nB', 'lMPCZ7ggn4lOWQZsvlun')
   } , [])
 
 //  useEffect(() => {

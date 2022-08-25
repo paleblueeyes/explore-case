@@ -1,6 +1,5 @@
 import { initializeApp } from "firebase/app"
-import React, { useState } from 'react';
-import { getFirestore, getDoc, getDocs, query, onSnapshot, collection, doc, updateDoc } from 'firebase/firestore';
+import { getFirestore, getDoc, query, onSnapshot, collection, doc, updateDoc } from 'firebase/firestore';
 
 
 const firebaseConfig = {
@@ -59,7 +58,6 @@ const registerUserOnTrip = async (userId, tripId) => {
         return null
     }
 
-    const user = userSnap.data()
     const trip = tripSnap.data()
 
     if (trip.registered.length >= trip.Seats) {
@@ -82,4 +80,41 @@ const registerUserOnTrip = async (userId, tripId) => {
       });
 }
 
-export {db, getTripIdMaps, getUserIdMaps, registerUserOnTrip}
+const cancelRegistration = async (userId, tripId) => {
+    const userRef = doc(db, "users", userId);
+    const userSnap = await getDoc(userRef);
+
+    const tripRef = doc(db, "trips", tripId);
+    const tripSnap = await getDoc(tripRef);
+
+    if ( !(userSnap.exists() && tripSnap.exists()) ) {
+        return null
+    }
+
+    const trip = tripSnap.data()
+
+    if (!trip.registered.includes(userId)) {
+        // Not registered
+        console.log("Not registered")
+        return null
+    }
+
+    // Remove from registered
+    await updateDoc(tripRef, {
+        registered : trip.registered.filter(id => id !== userId)
+        });
+    console.log("Cancelled registration for user " + userId + " on trip " + tripId)
+
+    // If waitlist is not empty, add to registered
+    if (trip.waitlist.length > 0) {
+        const userId = trip.waitlist.shift()
+        await updateDoc(tripRef, {
+            registered : [...trip.registered, userId],
+            waitlist : trip.waitlist
+        });
+        console.log("Added user " + userId + " to registered on trip " + tripId)
+    }
+
+}
+
+export {db, getTripIdMaps, getUserIdMaps, registerUserOnTrip, cancelRegistration}
