@@ -2,26 +2,30 @@ import logo from './logo.svg';
 import './App.css';
 import React, { useEffect, useState } from 'react';
 
-import { doc, getDoc } from 'firebase/firestore';
-import {db} from './firebase'
+import { doc, getDoc, query, orderBy, onSnapshot, collection } from 'firebase/firestore';
+import {db, getTripIdMaps, registerUserOnTrip} from './firebase'
 
 
 
-function App() {
+function App() {  
+  
+  const [trips, setTrips] = useState([])
+  const [loading, setLoading] = useState(true)
+
   useEffect(() => {
-    const fetchData = async () => {
-      const docRef = doc(db, "Mock-data", "Utflukt");
-      const docSnap = await getDoc(docRef);
-      
-      if (docSnap.exists()) {
-        console.log("Document data:", docSnap.data());
-      } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-      }
-    }
-    fetchData();
-  }, [db]);
+    registerUserOnTrip('Oazw7tXQK4XTI5XBh8nB', 'lMPCZ7ggn4lOWQZsvlun')
+  } , [])
+
+//  useEffect(() => {
+//    const q = query(collection(db, 'trips')) //, orderBy('ID', 'desc'))
+//    onSnapshot(q, (querySnapshot) => {
+//      querySnapshot.forEach((doc) => {
+//        setDocID(docIDs => [...docIDs, doc.id])
+//      })
+//      
+//    })
+//    console.log(docIDs);
+//  },[db])
   
   
   return (

@@ -1,5 +1,7 @@
 import { initializeApp } from "firebase/app"
-import { getFirestore } from "firebase/firestore"
+import React, { useState } from 'react';
+import { getFirestore, getDoc, getDocs, query, onSnapshot, collection, doc, updateDoc } from 'firebase/firestore';
+
 
 const firebaseConfig = {
     apiKey: "AIzaSyAyAd0nrX_gQ4h7SP2b13R20oGoSouKEkY",
@@ -15,4 +17,69 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
 
-export {db}
+const getTripIdMaps = async () => {
+    const tripNameIdMap = {}
+    const tripIdNameMap = {}
+    const trips = query(collection(db, 'trips'))
+    onSnapshot(trips, (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            tripNameIdMap[doc.data().Name] = doc.id
+        } )
+    } )
+    // reverse map
+    for (const [key, value] of Object.entries(tripNameIdMap)) {
+        tripIdNameMap[value] = key
+    }
+    return [tripNameIdMap, tripIdNameMap]
+}
+
+const getUserIdMaps = async () => {
+    const userNameIdMap = {}
+    const userIdNameMap = {}
+    const users = query(collection(db, 'users'))
+    onSnapshot(users, (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            userNameIdMap[doc.data().Name] = doc.id
+        } )
+    } )
+    for (const [key, value] of Object.entries(userNameIdMap)) {
+        userIdNameMap[value] = key
+    }
+    return [userNameIdMap, userIdNameMap]
+}
+
+const registerUserOnTrip = async (userId, tripId) => {
+    const userRef = doc(db, "users", userId);
+    const userSnap = await getDoc(userRef);
+
+    const tripRef = doc(db, "trips", tripId);
+    const tripSnap = await getDoc(tripRef);
+
+    if ( !(userSnap.exists() && tripSnap.exists()) ) {
+        return null
+    }
+
+    const user = userSnap.data()
+    const trip = tripSnap.data()
+
+    if (trip.registered.length >= trip.Seats) {
+        await updateDoc(tripRef, {
+            waitlist : [...trip.waitlist, userId]
+          });
+        // Add to waitlist
+        return null
+    }
+
+    if (trip.registered.includes(userId)) {
+        // Already registered
+        console.log("Already registered")
+        return null
+    }
+
+    // Add to registered
+    await updateDoc(tripRef, {
+        registered : [...trip.registered, userId]
+      });
+}
+
+export {db, getTripIdMaps, getUserIdMaps, registerUserOnTrip}
