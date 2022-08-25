@@ -2,14 +2,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 import image from "../images/image-1.jpg";
 
-const ExcursionCard = ({ name, description, time, seats, price }) => {
+const ExcursionCard = ({ name, description, time, seats, price, id }) => {
   return (
     <div className="mb-8">
-      <Link to="/excursions/2">
+      <Link to={`/excursions/${id}`}>
         <img src={image} className="rounded-md" />
       </Link>
       <div className="flex justify-between mr-2 mt-2">
-        <Link to="/excursions/2">
+        <Link to={`/excursions/${id}`}>
           <p className="text-gray-800 font-bold">{name}</p>
         </Link>
         <div className="flex items-center">

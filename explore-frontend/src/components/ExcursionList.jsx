@@ -38,7 +38,9 @@ const ExcursionList = () => {
       const allTrips = [];
       querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
-        allTrips.push(doc.data());
+        const dataWithId = { ...doc.data() };
+        dataWithId.id = doc.id;
+        allTrips.push(dataWithId);
       });
       setTrips(allTrips);
     };
@@ -46,17 +48,16 @@ const ExcursionList = () => {
   }, []);
   return (
     <div className="mx-auto mt-8 w-4/5">
-      {trips.map(({ Name, Additional, date, Seats, Cost_adult }) => {
-        const formatted_date = new Date(Date.seconds).toLocaleDateString(
-          "en-us"
-        );
+      {trips.map(({ name, additional, date, seats, cost_adult, id }) => {
+        const formatted_date = date.toDate().toString(); //new Date(date.seconds).toDateString();
         return (
           <ExcursionCard
-            name={Name}
-            description={Additional}
+            name={name}
+            description={additional}
             time={formatted_date}
-            seats={Seats}
-            price={Cost_adult}
+            seats={seats}
+            price={cost_adult}
+            id={id}
           />
         );
       })}
