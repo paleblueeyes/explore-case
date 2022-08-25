@@ -1,68 +1,86 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
+import { db } from "../firebase.js";
+import { query, where, getDoc, doc } from "firebase/firestore";
+
+import ExcursionMock from "../mock/ExcursionMock";
 
 const ExcursionPage = () => {
-  const [register, setRegister] = useState(false);
+  const [trip, setTrip] = useState({});
+  const [buttonText, setButtonText] = useState("Book activity");
   let params = useParams();
-  console.log(params);
+
+  useEffect(() => {
+    const getTrip = async () => {
+      console.log(params);
+      const docRef = doc(db, "trips", params.id);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        console.log("Document data:", docSnap.data());
+        const tripData = docSnap.data();
+        setTrip(tripData);
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+      }
+    };
+    getTrip();
+  }, []);
+
+  const handleClick = () => {
+    setButtonText("Booked");
+  };
 
   return (
-    <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-      <div className="px-4 py-5 sm:px-6 rounded-sm">
-        <img src="images/basecamp.jpeg" />
+    <div className="bg-deep-blue min-h-screen text-white shadow overflow-hidden sm:rounded-lg">
+      <div className="flex">
+        <Link to="/excursions">
+          <img className="p-2 h-16" src="/images/Frame.png"></img>
+        </Link>
+      </div>
+      <div className="sm:px-6 rounded-sm">
+        <img src={ExcursionMock.image} />
       </div>
 
-      <div className="borter-t border-gray-200">
-        <dl>
-          <div className="bg-white px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-            <dt className="text-sm font-medium text-gray-500">
-              Excursion name
-            </dt>
-            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              Title
-            </dd>
+      <div className="pl-2 pt-2">
+        <p className="text-gray-400 text-sm">{ExcursionMock.date}</p>
+        <div className="flex pt-2">
+          <p className="font-bold text-2xl">{trip.name}</p>
+          <div className="flex items-center pl-4 pt-1">
+            <div className="w-3 h-3 rounded-full bg-green-600 mr-2"></div>
+            <p className="text-sm">Available seats left: {trip.seats}</p>
           </div>
-          <div className="bg-white px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-            <dt className="text-sm font-medium text-gray-500">Information</dt>
-            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              Information yet to come
-            </dd>
-          </div>
-          <div className="bg-white px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-            <dt className="text-sm font-medium text-gray-500">Start date</dt>
-            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              25. August 2022
-            </dd>
-          </div>
-          <div className="bg-white px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-            <dt className="text-sm font-medium text-gray-500">
-              Available seats
-            </dt>
-            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              27
-            </dd>
-          </div>
-          <div className="bg-white px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-            <dt className="text-sm font-medium text-gray-500">
-              Price for adults
-            </dt>
-            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              500 NOK
-            </dd>
-          </div>
-          <div className="bg-white px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-            <dt className="text-sm font-medium text-gray-500">
-              Price for children
-            </dt>
-            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              250 NOK
-            </dd>
-          </div>
+        </div>
+        <div className="pt-4 text-sm">{trip.additional}</div>
+        <h2 className="pt-4 text-xl">Key information</h2>
 
-          <button class="fixed w-full h-12 px-6 text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800 mr-4">
-            Register
+        <div className="pl-4">
+          <ul className="list-disc">
+            {ExcursionMock.keyInformation.map((item, i) => (
+              <li className="text-sm" key={i}>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h2 className="text-xl pt-4">Price</h2>
+          <p className="text-sm">Adults: {trip.cost_adult} NOK</p>
+          <p className="text-sm">Children: {trip.cost_child} NOK</p>
+          <p className="text-sm">
+            Cancellation fee: {trip.cancellation_fee} NOK
+          </p>
+        </div>
+
+        <div className="pt-4">
+          <button
+            class="border w-36 rounded-3xl h-12 px-6 text-deep-blue transition-colors duration-150 bg-white rounded-lg focus:shadow-outline hover:bg-white mr-4"
+            onClick={handleClick}
+          >
+            {buttonText}
           </button>
-        </dl>
+        </div>
       </div>
     </div>
   );
