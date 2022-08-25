@@ -6,6 +6,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ExcursionList from "./components/ExcursionList";
 import ExcursionPage from "./components/ExcursionPage";
+import BookingsList from "./components/BookingsList";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -15,6 +16,7 @@ root.render(
         <Route path="/" element={<App />} />
         <Route path="excursions/:excursionId" element={<ExcursionPage />} />
         <Route path="excursions" element={<ExcursionList />} />
+        <Route path="bookings" element={<BookingsList />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
