@@ -114,6 +114,7 @@ const cancelRegistration = async (userId, tripId) => {
         });
         console.log("Added user " + userId + " to registered on trip " + tripId)
     }
+    return trip.Cancellation_fee
 
 }
 

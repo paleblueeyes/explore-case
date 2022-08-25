@@ -1,16 +1,12 @@
 import './App.css';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
-import { doc, getDoc, query, orderBy, onSnapshot, collection } from 'firebase/firestore';
-import {db, getTripIdMaps, registerUserOnTrip, cancelRegistration} from './firebase'
+import {registerUserOnTrip, cancelRegistration} from './firebase'
 
 
 
 function App() {  
   
-  const [trips, setTrips] = useState([])
-  const [loading, setLoading] = useState(true)
-
   useEffect(() => {
     registerUserOnTrip('Oazw7tXQK4XTI5XBh8nB', 'lMPCZ7ggn4lOWQZsvlun')
     cancelRegistration('Oazw7tXQK4XTI5XBh8nB', 'lMPCZ7ggn4lOWQZsvlun')
