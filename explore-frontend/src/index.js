@@ -19,7 +19,8 @@ root.render(
         <Route path="/" element={<App />}>
 
         </Route>
-        <Route path="list" element={<ExcursionList />}>
+        <Route path="excursions" element={<ExcursionList />}>
+          
         </Route>
         <Route path="page" element={<ExcursionPage />}>
 
