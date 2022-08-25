@@ -1,5 +1,7 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import ExcursionCard from "./ExcursionCard";
+import { db } from "../firebase.js";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 const EXCURSIONS = [
   {
@@ -26,17 +28,39 @@ const EXCURSIONS = [
 ];
 
 const ExcursionList = () => {
+  const [trips, setTrips] = useState([]);
+
+  useEffect(() => {
+    const getTrips = async () => {
+      const q = query(collection(db, "trips"));
+
+      const querySnapshot = await getDocs(q);
+      const allTrips = [];
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        allTrips.push(doc.data());
+      });
+      setTrips(allTrips);
+    };
+    getTrips();
+  }, []);
   return (
     <div className="mx-auto mt-8 w-4/5">
-      {EXCURSIONS.map(({ name, description, time, seats, price }) => (
-        <ExcursionCard
-          name={name}
-          description={description}
-          time={time}
-          seats={seats}
-          price={price}
-        />
-      ))}
+      {trips.map(({ Name, Additional, date, Seats, Cost_adult }) => {
+        const formatted_date = new Date(Date.seconds).toLocaleDateString(
+          "en-us"
+        );
+        return (
+          <ExcursionCard
+            name={Name}
+            description={Additional}
+            time={formatted_date}
+            seats={Seats}
+            price={Cost_adult}
+          />
+        );
+      })}
+      {console.log(trips)}
     </div>
   );
 };
