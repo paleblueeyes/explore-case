@@ -47,21 +47,23 @@ const ExcursionList = () => {
     getTrips();
   }, []);
   return (
-    <div className="mx-auto mt-8 w-4/5">
-      {trips.map(({ name, additional, date, seats, cost_adult, id }) => {
-        const formatted_date = date.toDate().toString(); //new Date(date.seconds).toDateString();
-        return (
-          <ExcursionCard
-            name={name}
-            description={additional}
-            time={formatted_date}
-            seats={seats}
-            price={cost_adult}
-            id={id}
-          />
-        );
-      })}
-      {console.log(trips)}
+    <div className="bg-deep-blue pt-8">
+      <div className="mx-auto  w-11/12 h-screen">
+        {trips.map(({ name, additional, date, seats, cost_adult, id }) => {
+          const formatted_date = date.toDate().toString(); //new Date(date.seconds).toDateString();
+          return (
+            <ExcursionCard
+              name={name}
+              description={additional}
+              time={formatted_date}
+              seats={seats}
+              price={cost_adult}
+              id={id}
+            />
+          );
+        })}
+        {console.log(trips)}
+      </div>
     </div>
   );
 };

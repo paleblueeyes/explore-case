@@ -13,10 +13,11 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="excursions/:id" element={<ExcursionPage />} />
-        <Route path="excursions" element={<ExcursionList />} />
-        <Route path="bookings" element={<BookingsList />} />
+        <Route path="/" element={<App />}>
+          <Route path="excursions/:id" element={<ExcursionPage />} />
+          <Route path="excursions" element={<ExcursionList />} />
+          <Route path="bookings" element={<BookingsList />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
