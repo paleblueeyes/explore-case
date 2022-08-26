@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ExcursionList from "./components/ExcursionList";
 import ExcursionPage from "./components/ExcursionPage";
 import BookingsList from "./components/BookingsList";
+import BookingNumber from "./components/BookingNumber";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -17,6 +18,7 @@ root.render(
           <Route path="excursions/:id" element={<ExcursionPage />} />
           <Route path="excursions" element={<ExcursionList />} />
           <Route path="bookings" element={<BookingsList />} />
+          <Route path="login" element={<BookingNumber />} />
         </Route>
       </Routes>
     </BrowserRouter>
