@@ -1,34 +1,14 @@
-import './App.css';
-import React, { useEffect, useState } from 'react';
+import "./App.css";
+import React from "react";
+import { Outlet, Link } from "react-router-dom";
 
-import { doc, getDoc, query, orderBy, onSnapshot, collection } from 'firebase/firestore';
-import {db, getTripIdMaps, registerUserOnTrip} from './firebase'
-
-
-
-function App() {  
-  
-  const [trips, setTrips] = useState([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    registerUserOnTrip('Oazw7tXQK4XTI5XBh8nB', 'lMPCZ7ggn4lOWQZsvlun')
-  } , [])
-
-//  useEffect(() => {
-//    const q = query(collection(db, 'trips')) //, orderBy('ID', 'desc'))
-//    onSnapshot(q, (querySnapshot) => {
-//      querySnapshot.forEach((doc) => {
-//        setDocID(docIDs => [...docIDs, doc.id])
-//      })
-//      
-//    })
-//    console.log(docIDs);
-//  },[db])
-  
-  
+function App() {
   return (
-    <div className="App">
+    <div className="bg-deep-blue">
+      <Link to="/excursions">
+        <img className="p-2 ml-2 h-16" src="/images/Frame.png"></img>
+      </Link>
+      <Outlet />
     </div>
   );
 }
