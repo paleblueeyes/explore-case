@@ -5,7 +5,6 @@ import { db } from "../firebase.js";
 import { query, where, getDoc, doc } from "firebase/firestore";
 
 import ExcursionMock from "../mock/ExcursionMock";
-import BookingModal from "./BookingModal";
 
 const ExcursionPage = () => {
   useEffect(() => {
@@ -27,13 +26,24 @@ const ExcursionPage = () => {
   }, []);
   const [isOpen, setIsOpen] = useState(false);
 
-  function closeModal() {
+  const closeModal = () => {
     setIsOpen(false);
-  }
+  };
 
-  function openModal() {
+  const openModal = () => {
     setIsOpen(true);
-  }
+  };
+
+  const [confirmIsOpen, setConfirmIsOpen] = useState(false);
+
+  const closeConfirmModal = () => {
+    setConfirmIsOpen(false);
+  };
+
+  const openConfirmModal = () => {
+    closeModal();
+    setConfirmIsOpen(true);
+  };
 
   const [adultTickets, setAdultTickets] = useState(0);
   const [childrenTickets, setChildrenTickets] = useState(0);
@@ -59,8 +69,6 @@ const ExcursionPage = () => {
     setTotalSum(totalSum - trip.cost_child);
   }
 
-  function calculateTotalSum() {}
-
   const [trip, setTrip] = useState({});
   const [buttonText, setButtonText] = useState("Book activity");
   let params = useParams();
@@ -70,17 +78,17 @@ const ExcursionPage = () => {
   };
 
   return (
-    <div className="bg-deep-blue min-h-screen text-white shadow overflow-hidden sm:rounded-lg px-5">
+    <div className="bg-deep-blue min-h-screen text-white shadow overflow-hidden sm:rounded-lg">
       <div className="flex">
         <Link to="/excursions">
-          <img className="p-2 h-16" src="/images/Frame.png"></img>
+          <img className="pl-5 p-2 h-16" src="/images/Frame.png"></img>
         </Link>
       </div>
       <div className="sm:px-6 rounded-sm">
         <img src={trip.url} />
       </div>
 
-      <div className="pl-2 pt-2">
+      <div className="pl-5 pt-2">
         <p className="text-gray-400 text-sm">{ExcursionMock.date}</p>
         <div className="flex pt-2">
           <p className="font-bold text-2xl">{trip.name}</p>
@@ -103,10 +111,9 @@ const ExcursionPage = () => {
         </div>
         <div>
           <h2 className="text-xl pt-4">Price</h2>
-          <p className="text-sm">Adults: {trip.cost_adult} USD</p>
-          <p className="text-sm">Children: {trip.cost_child} USD</p>
           <p className="text-sm">
-            Cancellation fee: {trip.cancellation_fee} USD
+            {trip.cost_adult} dollars per adult, {trip.cost_child} dollar per
+            child
           </p>
         </div>
 
@@ -155,12 +162,20 @@ const ExcursionPage = () => {
                   leaveTo="opacity-0 scale-95"
                 >
                   <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+                    <div className="flex justify-end">
+                      <img
+                        className="h-7"
+                        src="/images/cross.png"
+                        onClick={closeModal}
+                      />
+                    </div>
                     <Dialog.Title
                       as="h3"
-                      className="text-lg font-medium leading-6 text-gray-900"
+                      className="text-lg text-center font-medium leading-6 text-gray-900"
                     >
                       Confirm Booking
                     </Dialog.Title>
+
                     <div className="mt-2">
                       <div className="flex justify-between items-center border-t">
                         <p className="text-sm text-gray-500 pt-2">Adult(s)</p>
@@ -213,8 +228,8 @@ const ExcursionPage = () => {
                     <div className="mt-4">
                       <button
                         type="button"
-                        className="inline-flex justify-center px-4 py-2 text-sm text-red-900 bg-red-100 border border-transparent rounded-md hover:bg-red-200 duration-300"
-                        onClick={closeModal}
+                        className="flex justify-center content-center px-4 py-2 text-sm text-white bg-deep-blue border border-transparent rounded-3xl"
+                        onClick={openConfirmModal}
                       >
                         Book
                       </button>
