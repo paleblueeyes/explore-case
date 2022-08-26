@@ -34,11 +34,6 @@ const ExcursionPage = () => {
 
   return (
     <div className="bg-deep-blue min-h-screen text-white shadow overflow-hidden sm:rounded-lg">
-      <div className="flex">
-        <Link to="/excursions">
-          <img className="p-2 h-16" src="/images/Frame.png"></img>
-        </Link>
-      </div>
       <div className="sm:px-6 rounded-sm">
         <img src={ExcursionMock.image} />
       </div>
