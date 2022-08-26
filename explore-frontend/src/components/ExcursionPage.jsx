@@ -24,25 +24,31 @@ const ExcursionPage = () => {
     };
     getTrip();
   }, []);
-  const [isOpen, setIsOpen] = useState(false);
+  const [showBooking, setShowBooking] = useState(true); //Show/Hide Booking button
+  const hideBooking = () => {
+    setShowBooking(false);
+    displayTicketsBought();
+    displayCancelAndChange();
+    closeModal();
+  };
 
+  const [showCancelAndChange, setShowCancelAndChange] = useState(false); //Show/Hide Cancel and Change buttons
+  const displayCancelAndChange = () => {
+    setShowCancelAndChange(true);
+  };
+
+  const [showTicketsBought, setShowTicketsBought] = useState(false); //Show/Hide tickets bought
+  const displayTicketsBought = () => {
+    setShowTicketsBought(true);
+  };
+
+  const [isOpen, setIsOpen] = useState(false); //Open/Close modal
   const closeModal = () => {
     setIsOpen(false);
   };
 
   const openModal = () => {
     setIsOpen(true);
-  };
-
-  const [confirmIsOpen, setConfirmIsOpen] = useState(false);
-
-  const closeConfirmModal = () => {
-    setConfirmIsOpen(false);
-  };
-
-  const openConfirmModal = () => {
-    closeModal();
-    setConfirmIsOpen(true);
   };
 
   const [adultTickets, setAdultTickets] = useState(0);
@@ -55,8 +61,10 @@ const ExcursionPage = () => {
   }
 
   function decrementAdultTickets() {
-    setAdultTickets(adultTickets - 1);
-    setTotalSum(totalSum - trip.cost_adult);
+    if (adultTickets > 0) {
+      setAdultTickets(adultTickets - 1);
+      setTotalSum(totalSum - trip.cost_adult);
+    }
   }
 
   function incrementChildrenTickets() {
@@ -65,32 +73,60 @@ const ExcursionPage = () => {
   }
 
   function decrementChildrenTickets() {
-    setChildrenTickets(childrenTickets - 1);
-    setTotalSum(totalSum - trip.cost_child);
+    if (childrenTickets > 0) {
+      setChildrenTickets(childrenTickets - 1);
+      setTotalSum(totalSum - trip.cost_child);
+    }
   }
 
   const [trip, setTrip] = useState({});
-  const [buttonText, setButtonText] = useState("Book activity");
-  let params = useParams();
 
-  const handleClick = () => {
-    setButtonText("Booked");
-  };
+  let params = useParams();
+  let formatted_date = null;
+  if (trip.date) {
+    formatted_date = trip.date.toDate().toString().split("GMT")[0];
+  }
 
   return (
     <div className="bg-deep-blue min-h-screen text-white shadow overflow-hidden sm:rounded-lg">
-      <div className="sm:px-6 rounded-sm">
+      <div className="sm:px-6 rounded-sm relative">
         <img src={trip.url} />
+        {showCancelAndChange && (
+          <div className="flex justify-between pl-4 pt-2 object-bottom">
+            <button class="border w-46 rounded-3xl h-12 px-6 text-deep-blue transition-colors duration-150 bg-white rounded-lg focus:shadow-outline hover:bg-white mr-4">
+              Cancel Booking
+            </button>
+            <button class="border w-36 rounded-3xl h-12 px-6 text-deep-blue transition-colors duration-150 bg-white rounded-lg focus:shadow-outline hover:bg-white mr-4">
+              Change
+            </button>
+          </div>
+        )}
       </div>
-      <div className="pl-2 pt-2">
-        <p className="text-gray-400 text-sm">{ExcursionMock.date}</p>
+      <div className="pl-5 pr-5 pt-5">
+        <p className="text-gray-400 text-sm">
+          {formatted_date ? formatted_date : null}
+        </p>
         <div className="flex pt-2">
           <p className="font-bold text-2xl">{trip.name}</p>
           <div className="flex items-center pl-4 pt-1">
             <div className="w-3 h-3 rounded-full bg-green-600 mr-2"></div>
-            <p className="text-sm">Available seats left: {trip.seats}</p>
+            <p className="text-sm">
+              Available seats left:{" "}
+              {trip.seats - (adultTickets + childrenTickets)}
+            </p>
           </div>
         </div>
+        {showTicketsBought && (
+          <div className="pt-2">
+            <div className="bg-white rounded-xl h-16 w-11/12">
+              <p className="text-deep-blue text-center pt-2 ">
+                Booked for {adultTickets} adults and {childrenTickets} children
+                for <br></br>
+                {formatted_date}
+              </p>
+            </div>
+          </div>
+        )}
         <div className="pt-4 text-sm">{trip.additional}</div>
         <h2 className="pt-4 text-xl">Key information</h2>
 
@@ -112,13 +148,15 @@ const ExcursionPage = () => {
         </div>
 
         <div className="pt-4">
-          <button
-            type="button"
-            class="border w-36 rounded-3xl h-12 px-6 text-deep-blue transition-colors duration-150 bg-white rounded-lg focus:shadow-outline hover:bg-white mr-4"
-            onClick={openModal}
-          >
-            Book
-          </button>
+          {showBooking && (
+            <button
+              type="button"
+              class="border w-36 rounded-3xl h-12 px-6 text-deep-blue transition-colors duration-150 bg-white rounded-lg focus:shadow-outline hover:bg-white mr-4"
+              onClick={openModal}
+            >
+              Book
+            </button>
+          )}
 
           <Transition appear show={isOpen} as={Fragment}>
             <Dialog
@@ -172,7 +210,9 @@ const ExcursionPage = () => {
 
                     <div className="mt-2">
                       <div className="flex justify-between items-center border-t">
-                        <p className="text-sm text-gray-500 pt-2">Adult(s)</p>
+                        <p className="text-sm text-gray-500 pt-2">
+                          Adult(s) ・ {trip.cost_adult}$
+                        </p>
                         <div className="flex justify-between w-16 ml-4 items-center pt-3">
                           <img
                             className="h-4"
@@ -190,7 +230,9 @@ const ExcursionPage = () => {
                       </div>
 
                       <div className="flex justify-between items-center border-t">
-                        <p className="text-sm text-gray-500  pt-2">Children</p>
+                        <p className="text-sm text-gray-500  pt-2">
+                          Children ・ {trip.cost_child}$
+                        </p>
                         <div className="flex justify-between w-16 ml-4 items-center pt-3">
                           <img
                             className="h-4"
@@ -223,9 +265,9 @@ const ExcursionPage = () => {
                       <button
                         type="button"
                         className="flex justify-center content-center px-4 py-2 text-sm text-white bg-deep-blue border border-transparent rounded-3xl"
-                        onClick={openConfirmModal}
+                        onClick={hideBooking}
                       >
-                        Book
+                        Book Activity
                       </button>
                     </div>
                   </div>

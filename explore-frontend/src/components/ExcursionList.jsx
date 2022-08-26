@@ -48,7 +48,7 @@ const ExcursionList = () => {
   }, []);
   return (
     <div className="bg-deep-blue pt-8">
-      <div className="mx-auto  w-11/12 h-screen">
+      <div className="mx-auto  w-11/12 min-h-screen">
         {trips.map(({ name, additional, date, seats, cost_adult, id }) => {
           const formatted_date = date.toDate().toString(); //new Date(date.seconds).toDateString();
           return (
