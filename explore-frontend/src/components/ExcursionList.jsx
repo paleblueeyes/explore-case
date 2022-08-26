@@ -48,10 +48,11 @@ const ExcursionList = () => {
     getTrips();
   }, []);
   return (
-    <div className="bg-deep-blue pt-8">
+    <div className="bg-deep-blue p-4">
       <div className="mx-auto  w-11/12 h-screen">
         <h2 className="text-white text-xl">
-          Hi Alex! What do you want to do today?
+          Hi Alex!
+          <br /> What do you want to do today?
         </h2>
         <HorizontalCalendar />
         {trips.map(({ name, additional, date, seats, cost_adult, id, url }) => {

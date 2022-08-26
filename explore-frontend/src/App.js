@@ -4,9 +4,9 @@ import { Outlet, Link } from "react-router-dom";
 
 function App() {
   return (
-    <div className="bg-deep-blue min-h-screen overflow-y-scroll p-4">
+    <div className="bg-deep-blue min-h-screen overflow-y-scroll">
       <Link to="/excursions">
-        <img className="p-2 ml-2 h-16" src="/images/Frame.png"></img>
+        <img className="p-2 ml-5 mt-2 h-16" src="/images/Frame.png"></img>
       </Link>
       <Outlet />
     </div>

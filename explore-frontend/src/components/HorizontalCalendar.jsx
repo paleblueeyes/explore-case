@@ -78,7 +78,7 @@ function RightArrow() {
 
 function Card({ onClick, selected, title, itemId, idx, day }) {
   const visibility = React.useContext(VisibilityContext);
-  console.log(day);
+  console.log(selected);
   return (
     <div
       onClick={() => onClick(visibility)}
@@ -91,8 +91,20 @@ function Card({ onClick, selected, title, itemId, idx, day }) {
       className="my-8"
     >
       <div className="text-white">
-        <p className="text-white text-xs ml-1">{day}</p>
-        <div className="w-8 h-8 bg-white rounded-full border-2 border-blue-300 flex justify-center item-center text-gray-800 text-sm">
+        <p
+          className={`text-white text-xs ml-1 ${
+            selected ? "text-orange-300" : "text-white"
+          }`}
+        >
+          {day}
+        </p>
+        <div
+          className={`w-8 h-8 rounded-full border-2 ${
+            selected ? "bg-orange-300" : "bg-white"
+          } ${
+            selected ? "border-white" : "border-blue-300"
+          } flex justify-center item-center text-gray-800 text-sm`}
+        >
           <p className="mt-1">{idx + 1}</p>
         </div>
       </div>
