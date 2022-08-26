@@ -9,7 +9,7 @@ const BookingNumber = () => {
     navigate(path);
   };
   return (
-    <div className="p-4">
+    <div className="p-6">
       <h2 className="text-white text-3xl pt-6">What is your booking number?</h2>
       <div className="pt-12 text-2xl">
         <input type="number" className="rounded-md p-2" />
