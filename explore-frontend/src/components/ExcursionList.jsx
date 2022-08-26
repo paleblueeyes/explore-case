@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import ExcursionCard from "./ExcursionCard";
 import { db } from "../firebase.js";
 import { collection, query, where, getDocs } from "firebase/firestore";
+import HorizontalCalendar from "./HorizontalCalendar";
 
 const EXCURSIONS = [
   {
@@ -49,6 +50,10 @@ const ExcursionList = () => {
   return (
     <div className="bg-deep-blue pt-8">
       <div className="mx-auto  w-11/12 h-screen">
+        <h2 className="text-white text-xl">
+          Hi Alex! What do you want to do today?
+        </h2>
+        <HorizontalCalendar />
         {trips.map(({ name, additional, date, seats, cost_adult, id, url }) => {
           const formatted_date = date.toDate().toString(); //new Date(date.seconds).toDateString();
           return (
