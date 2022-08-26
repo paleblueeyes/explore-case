@@ -54,7 +54,7 @@ const ExcursionList = () => {
           Hi Alex! What do you want to do today?
         </h2>
         <HorizontalCalendar />
-        {trips.map(({ name, additional, date, seats, cost_adult, id }) => {
+        {trips.map(({ name, additional, date, seats, cost_adult, id, url }) => {
           const formatted_date = date.toDate().toString(); //new Date(date.seconds).toDateString();
           return (
             <ExcursionCard
@@ -64,6 +64,7 @@ const ExcursionList = () => {
               seats={seats}
               price={cost_adult}
               id={id}
+              url={url}
             />
           );
         })}
