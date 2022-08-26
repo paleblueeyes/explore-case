@@ -17,6 +17,7 @@ const ExcursionPage = () => {
         console.log("Document data:", docSnap.data());
         const tripData = docSnap.data();
         setTrip(tripData);
+        setSeatsAvailable(tripData.seats);
       } else {
         // doc.data() will be undefined in this case
         console.log("No such document!");
@@ -24,6 +25,14 @@ const ExcursionPage = () => {
     };
     getTrip();
   }, []);
+  const [trip, setTrip] = useState({});
+
+  let params = useParams();
+  let formatted_date = null;
+  if (trip.date) {
+    formatted_date = trip.date.toDate().toString().split("GMT")[0];
+  }
+
   const [showBooking, setShowBooking] = useState(true); //Show/Hide Booking button
   const hideBooking = () => {
     setShowBooking(false);
@@ -35,6 +44,21 @@ const ExcursionPage = () => {
   const [showCancelAndChange, setShowCancelAndChange] = useState(false); //Show/Hide Cancel and Change buttons
   const displayCancelAndChange = () => {
     setShowCancelAndChange(true);
+  };
+
+  let [seatsAvailable, setSeatsAvailable] = useState(null);
+  let [adultTickets, setAdultTickets] = useState(0);
+  let [childrenTickets, setChildrenTickets] = useState(0);
+  let [totalSum, setTotalSum] = useState(0);
+
+  const cancelBookedTickets = () => {
+    setSeatsAvailable(seatsAvailable + adultTickets + childrenTickets);
+    adultTickets = 0;
+    childrenTickets = 0;
+    totalSum = 0;
+    setShowCancelAndChange(false);
+    setShowTicketsBought(false);
+    setShowBooking(true);
   };
 
   const [showTicketsBought, setShowTicketsBought] = useState(false); //Show/Hide tickets bought
@@ -50,10 +74,6 @@ const ExcursionPage = () => {
   const openModal = () => {
     setIsOpen(true);
   };
-
-  const [adultTickets, setAdultTickets] = useState(0);
-  const [childrenTickets, setChildrenTickets] = useState(0);
-  const [totalSum, setTotalSum] = useState(0);
 
   function incrementAdultTickets() {
     setAdultTickets(adultTickets + 1);
@@ -78,25 +98,24 @@ const ExcursionPage = () => {
       setTotalSum(totalSum - trip.cost_child);
     }
   }
-
-  const [trip, setTrip] = useState({});
-
-  let params = useParams();
-  let formatted_date = null;
-  if (trip.date) {
-    formatted_date = trip.date.toDate().toString().split("GMT")[0];
-  }
+  console.log(seatsAvailable);
 
   return (
     <div className="bg-deep-blue min-h-screen text-white shadow overflow-hidden sm:rounded-lg">
       <div className="sm:px-6 rounded-sm relative">
         <img src={trip.url} />
         {showCancelAndChange && (
-          <div className="flex justify-between pl-4 pt-2 object-bottom">
-            <button class="border w-46 rounded-3xl h-12 px-6 text-deep-blue transition-colors duration-150 bg-white rounded-lg focus:shadow-outline hover:bg-white mr-4">
+          <div className="flex bottom-0 justify-center pb-2 -mt-16">
+            <button
+              class="border w-46 rounded-3xl h-12 px-6 text-deep-blue transition-colors duration-150 bg-white rounded-lg focus:shadow-outline hover:bg-white mr-4"
+              onClick={cancelBookedTickets}
+            >
               Cancel Booking
             </button>
-            <button class="border w-36 rounded-3xl h-12 px-6 text-deep-blue transition-colors duration-150 bg-white rounded-lg focus:shadow-outline hover:bg-white mr-4">
+            <button
+              class="border w-36 rounded-3xl h-12 px-6 text-deep-blue transition-colors duration-150 bg-white rounded-lg focus:shadow-outline hover:bg-white mr-4"
+              onClick={openModal}
+            >
               Change
             </button>
           </div>
@@ -112,7 +131,7 @@ const ExcursionPage = () => {
             <div className="w-3 h-3 rounded-full bg-green-600 mr-2"></div>
             <p className="text-sm">
               Available seats left:{" "}
-              {trip.seats - (adultTickets + childrenTickets)}
+              {seatsAvailable - (adultTickets + childrenTickets)}
             </p>
           </div>
         </div>
